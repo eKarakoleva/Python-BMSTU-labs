@@ -54,5 +54,5 @@ print()
 print('│ Части │ Симсона │ Средних прям │')
 
 for i in range(len(res_1)):
-    print('│   %1.d   │ %7.4f │   %7.4f    │' % (parts_arr[i],res_2[i],res_2[i]))
+    print('│   %1.d   │ %7.4f │   %7.4f    │' % (parts_arr[i],res_1[i],res_2[i]))
 
