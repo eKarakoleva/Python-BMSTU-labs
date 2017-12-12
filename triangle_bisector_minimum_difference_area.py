@@ -29,7 +29,7 @@ def input_dots():
 
 def find_area(a, b, c):
     p = round((a + b + c) / 2, 5)
-    area = round((p * (p - a) * (p - b) * (p - c)) ** 0.5, 5)
+    area = round(abs(p * (p - a) * (p - b) * (p - c)) ** 0.5, 5)
     return area
 
 
