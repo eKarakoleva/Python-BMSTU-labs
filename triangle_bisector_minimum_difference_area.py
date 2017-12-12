@@ -63,7 +63,7 @@ def search(x, y):
                 if min_difference == 0.0:
 
                     min_difference = difference
-                if min_difference > difference and difference > 0.3:
+                if min_difference > difference:
                     min_difference = difference
                     x_min = []
                     y_min = []
