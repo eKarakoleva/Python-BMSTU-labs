@@ -2,6 +2,8 @@
 Program to find triangle (on a plane of dots)
 which have a minimum difference between areas
 of triangles made by one of the bisectors
+    A
+B       C
 '''
 
 from math import pi, sqrt
