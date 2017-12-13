@@ -29,12 +29,16 @@ def input_dots():
 
 def find_area(a, b, c):
     p = round((a + b + c) / 2, 5)
+
     area = round(abs(p * (p - a) * (p - b) * (p - c)) ** 0.5, 5)
     return area
 
 
 def find_distance(x1, x2, y1, y2):
     return sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+
+def check_line(x1,x2,x3,y1,y2,y3):
+    return (x2-x1)*(y3-y1) == (x3-x1)*(y2-y1)
 
 
 # Составление всех возможных комбинаций с нахождением разницы площадей
@@ -45,45 +49,46 @@ def search(x, y):
     for ai in range(len(x)):
         for bi in range(ai+1, len(x)):
             for ci in range(bi+1, len(x)):
-                ab = find_distance(x[bi], x[ai], y[bi], y[ai])
-                ac = find_distance(x[ci], x[ai], y[ci], y[ai])
-                #ab/ac = bd/cd
-                #intersection between bisector and side (coordinate of the point)
-                constant = ab/ac
-                xd = (constant*y[ci] + y[bi]) / (1+constant)
-                yd = (constant * y[ci] + y[bi]) / (1 + constant)
+                if not check_line(x[ai], x[bi], x[ci], y[ai], y[bi], y[ci]):
+                    ab = find_distance(x[bi], x[ai], y[bi], y[ai])
+                    ac = find_distance(x[ci], x[ai], y[ci], y[ai])
+                    #ab/ac = bd/cd
+                    #intersection between bisector and side (coordinate of the point)
+                    constant = ab/ac
+                    xd = (constant*y[ci] + y[bi]) / (1+constant)
+                    yd = (constant * y[ci] + y[bi]) / (1 + constant)
 
-                bd = find_distance(xd, x[bi], yd, y[bi])
-                dc = find_distance(x[ci], xd, y[ci], yd)
-                ad = find_distance(xd, x[ai], yd, y[ai])
+                    bd = find_distance(xd, x[bi], yd, y[bi])
+                    dc = find_distance(x[ci], xd, y[ci], yd)
+                    ad = find_distance(xd, x[ai], yd, y[ai])
 
-                area1 = find_area(bd, ad, ab)
-                area2 = find_area(dc, ad, ac)
-                difference = abs(area1 - area2)
-                if min_difference == 0.0:
+                    area1 = find_area(bd, ad, ab)
+                    area2 = find_area(dc, ad, ac)
+                    difference = abs(area1 - area2)
 
-                    min_difference = difference
-                if min_difference > difference:
-                    min_difference = difference
-                    x_min = []
-                    y_min = []
-                    x_min.append(x[ai])
-                    x_min.append(x[bi])
-                    x_min.append(x[ci])
-                    y_min.append(y[ai])
-                    y_min.append(y[bi])
-                    y_min.append(y[ci])
+                    if min_difference == 0.0:
+                        min_difference = difference
+                    if min_difference > difference:
+                        min_difference = difference
+                        x_min = []
+                        y_min = []
+                        x_min.append(x[ai])
+                        x_min.append(x[bi])
+                        x_min.append(x[ci])
+                        y_min.append(y[ai])
+                        y_min.append(y[bi])
+                        y_min.append(y[ci])
 
     return(x_min, y_min,min_difference)
 
 
 x_coord, y_coord = input_dots()
 x_res, y_res, min_difference_area = search(x_coord, y_coord)
-if len(x_res) != 0 :
+if len(x_coord) != 0 and len(x_res) != 0:
     print('Искомые точки обладают координатами: ')
     for i in range(len(x_res)):
         print('( {:} ; {:} )'.format(x_res[i], y_res[i]))
-    print('Разность площадей треугольников образуваны от бисектриса = {:.4f}'.format(min_difference_area))
+    print('Разность площадей треугольников образуваны от бисектриса = {:.7f}'.format(min_difference_area))
     x_res.append(x_res[0])
     y_res.append(y_res[0])
     plt.scatter(x_coord, y_coord)
