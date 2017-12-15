@@ -77,11 +77,6 @@ def DrawBtnClicked():
                     ac = find_distance(x[ci], x[ai], y[ci], y[ai])
                     #ab/ac = bd/cd
                     #intersection between bisector and side (coordinate of the point)
-
-                    if area(x1, y1, x2, y2, x3, y3) != 0:
-                        angA = angle(dlin_bc, dlin_ca, dlin_ab)
-                        angB = angle(dlin_ca, dlin_ab, dlin_bc)
-                        angC = angle(dlin_ab, dlin_bc, dlin_ca)
                     constant = ab/ac
                     xd = (constant*x[ci] + x[bi]) / (1+constant)
                     yd = (constant * y[ci] + y[bi]) / (1 + constant)
