@@ -1,9 +1,7 @@
 '''
 Program to find triangle (on a plane of dots)
 which have a minimum difference between areas
-of triangles made by one of the bisectors
-    A
-B       c
+of triangles made by one of the bisectors (min angle)
 '''
 
 from math import sqrt,degrees, acos
@@ -58,6 +56,24 @@ def readListBox(ListBox):
     return (x, y)
 
 
+def find_bisector(x1,x2,y1,y2,side1,side2):
+    constant = side1 / side2
+    xd = (constant * x1 + x2) / (1 + constant)
+    yd = (constant * y1 + y2) / (1 + constant)
+    return (xd,yd)
+
+
+def find_difference(x1,x2,y1,y2,x3,y3,side1,side2):
+    xd, yd = find_bisector(x1,x2,y1,y2,side1,side2)
+
+    bd = find_distance(xd, x2, yd, y2)
+    dc = find_distance(x1, xd, y1, yd)
+    ad = find_distance(xd, x3, yd, y3)
+
+    area1 = find_area(bd, ad, side1)
+    area2 = find_area(dc, ad, side2)
+    return abs(area1 - area2)
+
 # Составление всех возможных комбинаций с нахождением разницы площадей
 def DrawBtnClicked():
     a.cla()
@@ -75,19 +91,33 @@ def DrawBtnClicked():
                 if not check_line(x[ai], x[bi], x[ci], y[ai], y[bi], y[ci]):
                     ab = find_distance(x[bi], x[ai], y[bi], y[ai])
                     ac = find_distance(x[ci], x[ai], y[ci], y[ai])
-                    #ab/ac = bd/cd
-                    #intersection between bisector and side (coordinate of the point)
-                    constant = ab/ac
-                    xd = (constant*x[ci] + x[bi]) / (1+constant)
-                    yd = (constant * y[ci] + y[bi]) / (1 + constant)
+                    bc = find_distance(x[ci], x[bi], y[ci], y[bi])
 
-                    bd = find_distance(xd, x[bi], yd, y[bi])
-                    dc = find_distance(x[ci], xd, y[ci], yd)
-                    ad = find_distance(xd, x[ai], yd, y[ai])
+                    if ab < ac:
+                        if ab < bc:
+                            #ab
+                            xd, yd = find_bisector(x[bi], x[ai], y[bi], y[ai], ac, bc)
+                            difference = find_difference(x[bi], x[ai], y[bi], y[ai], x[ci], y[ci], ac, bc)
+                            top = ci
+                        else:
+                            #bc
+                            top = ai
+                            xd, yd = find_bisector(x[ci], x[bi], y[ci], y[bi], ab, ac)
+                            difference =find_difference(x[ci], x[bi], y[ci], y[bi], x[ai], y[ai], ab, ac)
+                    else:
+                        if ac < bc:
+                            #ac
+                            top = bi
+                            xd, yd = find_bisector(x[ci], x[ai], y[ci], y[ai], ab, bc)
+                            difference = find_difference(x[ci], x[ai], y[ci], y[ai], x[bi], y[bi], ab, bc)
 
-                    area1 = find_area(bd, ad, ab)
-                    area2 = find_area(dc, ad, ac)
-                    difference = abs(area1 - area2)
+                        else:
+                            #bc
+                            top = ai
+                            xd, yd = find_bisector(x[ci], x[bi], y[ci], y[bi], ab, ac)
+                            difference = find_difference(x[ci], x[bi], y[ci], y[bi], x[ai], y[ai], ab, ac)
+
+
                     if min_difference == 0.0:
                         min_difference = difference
                     if min_difference >= difference:
@@ -96,8 +126,8 @@ def DrawBtnClicked():
                         y_min = []
                         x_a = []
                         y_a = []
-                        x_a.append(x[ai])
-                        y_a.append(y[ai])
+                        x_a.append(x[top])
+                        y_a.append(y[top])
                         x_d = []
                         y_d = []
                         x_d.append(xd)
@@ -118,18 +148,23 @@ def DrawBtnClicked():
         a.plot(x_d, y_d, "gx")
         a.plot([x_a, x_d],[y_a, y_d], "go-")
         canvas.show()
+
+
         print('Разность площадей треугольников образуваны от бисектриса = {:.7f}'.format(min_difference))
+
     else:
         messagebox.showerror("Error ", "Все точки лежат на 1 прямой!")
 
 
 root = Tk()
+
 xLabel = Label(root, text="x:")
 xEntry = Entry(root)
 
 yLabel = Label(root, text="y:")
 yEntry = Entry(root)
 pointsListBox = Listbox(root)
+
 
 xLabel.grid(column=1, row=0, sticky=E)
 xEntry.grid(column=2, row=0)
