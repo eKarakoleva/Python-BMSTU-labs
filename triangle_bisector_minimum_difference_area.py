@@ -67,8 +67,8 @@ def DrawBtnClicked():
     y_min = []
     x_a = []
     y_a = []
-    #x_d = []
-    #y_d = []
+    x_d = []
+    y_d = []
     for ai in range(len(x)):
         for bi in range(ai+1, len(x)):
             for ci in range(bi+1, len(x)):
@@ -103,10 +103,10 @@ def DrawBtnClicked():
                         y_a = []
                         x_a.append(x[ai])
                         y_a.append(y[ai])
-                        #x_d = []
-                        #y_d = []
-                        #x_d.append(xd)
-                        #y_d.append(yd)
+                        x_d = []
+                        y_d = []
+                        x_d.append(xd)
+                        y_d.append(yd)
                         x_min.append(x[ai])
                         x_min.append(x[bi])
                         x_min.append(x[ci])
@@ -120,8 +120,8 @@ def DrawBtnClicked():
         a.scatter(x, y)
         a.plot([el for el in x_min], [el for el in y_min],"ro-")
         a.plot(x_a, y_a, "gx")
-        #a.plot(x_d, y_d, "gx")
-        #a.plot([x_a, x_d],[y_a, y_d], "go-")
+        a.plot(x_d, y_d, "gx")
+        a.plot([x_a, x_d],[y_a, y_d], "go-")
         canvas.show()
         print('Разность площадей треугольников образуваны от бисектриса = {:.7f}'.format(min_difference))
     else:
