@@ -1,7 +1,7 @@
 '''
 Program to find triangle (on a plane of dots)
 which have a minimum difference between areas
-of triangles made by one of the bisectors (min angle)
+of triangles made by one of the bisectors(smallest angle)
 '''
 
 from math import sqrt,degrees, acos
@@ -26,6 +26,10 @@ def AddBtnClicked():
         if point not in pointsListBox.get("0", "end"):
             pointsListBox.insert("end", point)
 
+
+def delBtnClicked():
+    pointsListBox.delete(0, END)
+    a.cla()
 
 def find_area(a, b, c):
     p = round((a + b + c) / 2, 5)
@@ -56,15 +60,14 @@ def readListBox(ListBox):
     return (x, y)
 
 
-def find_bisector(x1,x2,y1,y2,side1,side2):
+def find_bisector(x1, x2, y1, y2, side1, side2):
     constant = side1 / side2
     xd = (constant * x1 + x2) / (1 + constant)
     yd = (constant * y1 + y2) / (1 + constant)
-    return (xd,yd)
+    return (xd, yd)
 
 
-def find_difference(x1,x2,y1,y2,x3,y3,side1,side2):
-    xd, yd = find_bisector(x1,x2,y1,y2,side1,side2)
+def find_difference(x1, x2, y1, y2, x3, y3, side1, side2,xd,yd):
 
     bd = find_distance(xd, x2, yd, y2)
     dc = find_distance(x1, xd, y1, yd)
@@ -74,17 +77,15 @@ def find_difference(x1,x2,y1,y2,x3,y3,side1,side2):
     area2 = find_area(dc, ad, side2)
     return abs(area1 - area2)
 
+
 # Составление всех возможных комбинаций с нахождением разницы площадей
 def DrawBtnClicked():
     a.cla()
     x, y = readListBox(pointsListBox)
     min_difference = 0.0
-    x_min = []
-    y_min = []
-    x_a = []
-    y_a = []
-    x_d = []
-    y_d = []
+    x_y_min = []
+    y_a_d = []
+    x_a_d = []
     for ai in range(len(x)):
         for bi in range(ai+1, len(x)):
             for ci in range(bi+1, len(x)):
@@ -96,61 +97,52 @@ def DrawBtnClicked():
                     if ab < ac:
                         if ab < bc:
                             #ab
-                            xd, yd = find_bisector(x[bi], x[ai], y[bi], y[ai], ac, bc)
-                            difference = find_difference(x[bi], x[ai], y[bi], y[ai], x[ci], y[ci], ac, bc)
+                            xd, yd = find_bisector(x[bi], x[ai], y[bi], y[ai], ac, bc, xd, yd)
+                            difference = find_difference(x[bi], x[ai], y[bi], y[ai], x[ci], y[ci], ac, bc, xd, yd)
                             top = ci
                         else:
                             #bc
                             top = ai
                             xd, yd = find_bisector(x[ci], x[bi], y[ci], y[bi], ab, ac)
-                            difference =find_difference(x[ci], x[bi], y[ci], y[bi], x[ai], y[ai], ab, ac)
+                            difference = find_difference(x[ci], x[bi], y[ci], y[bi], x[ai], y[ai], ab, ac, xd, yd)
                     else:
                         if ac < bc:
                             #ac
                             top = bi
                             xd, yd = find_bisector(x[ci], x[ai], y[ci], y[ai], ab, bc)
-                            difference = find_difference(x[ci], x[ai], y[ci], y[ai], x[bi], y[bi], ab, bc)
+                            difference = find_difference(x[ci], x[ai], y[ci], y[ai], x[bi], y[bi], ab, bc, xd, yd)
 
                         else:
                             #bc
                             top = ai
                             xd, yd = find_bisector(x[ci], x[bi], y[ci], y[bi], ab, ac)
-                            difference = find_difference(x[ci], x[bi], y[ci], y[bi], x[ai], y[ai], ab, ac)
+                            difference = find_difference(x[ci], x[bi], y[ci], y[bi], x[ai], y[ai], ab, ac, xd, yd)
 
 
                     if min_difference == 0.0:
                         min_difference = difference
                     if min_difference >= difference:
                         min_difference = difference
-                        x_min = []
-                        y_min = []
-                        x_a = []
-                        y_a = []
-                        x_a.append(x[top])
-                        y_a.append(y[top])
-                        x_d = []
-                        y_d = []
-                        x_d.append(xd)
-                        y_d.append(yd)
-                        x_min.append(x[ai])
-                        x_min.append(x[bi])
-                        x_min.append(x[ci])
-                        y_min.append(y[ai])
-                        y_min.append(y[bi])
-                        y_min.append(y[ci])
+                        x_a_d = []
+                        y_a_d = []
+                        x_y_min = []
+                        x_a_d.append([x[top]])
+                        y_a_d.append([y[top]])
+                        x_a_d.append([xd])
+                        y_a_d.append([yd])
+                        x_y_min.append([x[ai], x[bi], x[ci]])
+                        x_y_min.append([y[ai], y[bi], y[ci]])
 
-    if len(x) != 0 and len(x_min) != 0:
-        x_min.append(x_min[0])
-        y_min.append(y_min[0])
+    if len(x) != 0 and len(x_y_min[1]) != 0:
+        x_y_min[0].append(x_y_min[0][0])
+        x_y_min[1].append(x_y_min[1][0])
         a.scatter(x, y)
-        a.plot([el for el in x_min], [el for el in y_min],"ro-")
-        a.plot(x_a, y_a, "gx")
-        a.plot(x_d, y_d, "gx")
-        a.plot([x_a, x_d],[y_a, y_d], "go-")
+        a.plot([el for el in x_y_min[0]], [el for el in x_y_min[1]],"ro-")
+        a.plot(x_a_d[0], y_a_d[0], "gx")
+        a.plot(x_a_d[1], y_a_d[1], "gx")
+        a.plot([x_a_d[0], x_a_d[1]], [y_a_d[0], y_a_d[1]], "go-")
         canvas.show()
-
-
-        print('Разность площадей треугольников образуваны от бисектриса = {:.7f}'.format(min_difference))
+        #print('Разность площадей треугольников образуваны от бисектриса = {:.7f}'.format(min_difference))
 
     else:
         messagebox.showerror("Error ", "Все точки лежат на 1 прямой!")
@@ -177,6 +169,9 @@ AddBtn.grid(column=3, row=0, sticky=W)
 
 DrawBtn = Button(root, text="Draw", command=DrawBtnClicked)
 DrawBtn.grid(column=3, row=1, sticky=W)
+
+delBtn = Button(root, text="Delete", command=delBtnClicked)
+delBtn.grid(column=3, row=3, sticky=W)
 
 f = Figure(figsize=(5, 5), dpi=100)
 a = f.add_subplot(111, title="Graphic")
