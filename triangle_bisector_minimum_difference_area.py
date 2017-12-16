@@ -97,7 +97,7 @@ def DrawBtnClicked():
                     if ab < ac:
                         if ab < bc:
                             #ab
-                            xd, yd = find_bisector(x[bi], x[ai], y[bi], y[ai], ac, bc, xd, yd)
+                            xd, yd = find_bisector(x[bi], x[ai], y[bi], y[ai], ac, bc)
                             difference = find_difference(x[bi], x[ai], y[bi], y[ai], x[ci], y[ci], ac, bc, xd, yd)
                             top = ci
                         else:
