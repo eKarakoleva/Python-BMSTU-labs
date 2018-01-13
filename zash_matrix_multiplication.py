@@ -31,4 +31,25 @@ print()
 for row in mat_res:
     print(row)
 
- 
+'''
+n = int(input('Enter number of rows (NxN)'))
+X = []
+Y = []
+result = []
+
+for i in range(n):
+    row = list(map(int,input('Enter row:').split()))
+    X.append(row)
+
+for c in range(n):
+    row = list(map(int,input('Enter row:').split()))
+    Y.append(row)
+
+for i in range(len(X)):
+   result.append([0]*len(X))
+   for j in range(len(Y[0])):
+       for k in range(len(Y)):
+           result[i][j] += X[i][k] * Y[k][j]
+for r in result:
+   print(r)
+'''
