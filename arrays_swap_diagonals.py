@@ -1,5 +1,19 @@
-import math as m
+n = int(input('Enter number of rows (NxN)'))
+matrix = []
+for i in range(n):
+    row = list(map(int,input('Enter row:').split()))
+    matrix.append(row)
 
+for i in range(len(matrix)):
+    matrix[i][i], matrix[i][len(matrix)-1-i] = matrix[i][len(matrix)-1-i],matrix[i][i]
+
+for i in range(len(matrix)):
+    print(matrix[i])
+
+
+
+
+'''
 n = int(input('Enter number of rows (NxN)'))
 matrix = []
 for i in range(n):
@@ -19,3 +33,4 @@ for i in range(n):
 
 for row in matrix:
     print(row)
+'''    
